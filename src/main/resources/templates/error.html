@@ -1,0 +1,2 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Access denied')}" /><body><header th:replace="~{fragments/layout :: nav}"></header><main class="page narrow"><section class="form-panel"><p class="eyebrow">Something went wrong</p><h1>Access denied</h1><p th:text="${error}">You cannot access this resource.</p><a class="button primary" href="/dashboard">Back to dashboard</a></section></main></body></html>

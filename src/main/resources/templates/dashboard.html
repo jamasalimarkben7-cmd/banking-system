@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}" />
+<body>
+<header th:replace="~{fragments/layout :: nav}"></header>
+<main class="page">
+    <section class="page-heading">
+        <div><p class="eyebrow">Personal overview</p><h1 th:text="'Good to see you, ' + ${user.username}">Dashboard</h1></div>
+        <a class="button primary" href="/transactions/new">Move money</a>
+    </section>
+    <div class="alert success" th:if="${param.success}" th:text="'Your ' + ${param.success[0]} + ' was completed.'"></div>
+    <section class="account-grid">
+        <article class="account-card" th:each="account : ${accounts}">
+            <div class="card-top"><span class="account-type" th:text="${account.accountType}">CHECKING</span><span class="dot"></span></div>
+            <p class="account-number" th:text="${account.accountNumber}">000000</p>
+            <p class="balance" th:text="'$' + ${#numbers.formatDecimal(account.balance, 1, 2)}">$0.00</p>
+            <p class="muted">Available balance</p>
+        </article>
+        <article class="empty-state" th:if="${#lists.isEmpty(accounts)}"><h2>No accounts yet</h2><p class="muted">An administrator can create your first account.</p></article>
+    </section>
+    <section class="section-heading"><h2>Recent activity</h2><a href="/accounts">View accounts</a></section>
+    <section class="table-wrap">
+        <table>
+            <thead><tr><th>Type</th><th>Account</th><th>Direction</th><th>When</th><th class="amount">Amount</th></tr></thead>
+            <tbody><tr th:each="transaction : ${transactions}"><td><span class="pill" th:text="${transaction.type}">DEPOSIT</span></td><td th:text="${transaction.sourceAccountNumber ?: transaction.destinationAccountNumber}">000000</td><td th:text="${transaction.type == T(com.bankingsystem.model.TransactionType).TRANSFER ? 'Transfer' : transaction.type}">Deposit</td><td th:text="${#temporals.format(transaction.createdAt, 'MMM d, yyyy HH:mm')}">Today</td><td class="amount" th:text="'$' + ${#numbers.formatDecimal(transaction.amount, 1, 2)}">$0.00</td></tr><tr th:if="${#lists.isEmpty(transactions)}"><td colspan="5" class="muted">No transactions yet.</td></tr></tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

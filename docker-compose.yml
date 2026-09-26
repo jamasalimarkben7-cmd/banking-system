@@ -1,0 +1,46 @@
+# Docker Compose for Northstar Banking System
+# Provides PostgreSQL 15 database and Spring Boot application
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: banking-postgres
+    environment:
+      POSTGRES_DB: banking_system_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: MARK1212
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d banking_system_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banking-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/banking_system_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=MARK1212
+      - JWT_SECRET=northstar_banking_super_secret_key_2026_secure_jwt_token_validation_key
+      - JWT_EXPIRATION=86400000
+      - SERVER_PORT=8080
+      - DB_POOL_MAX_SIZE=10
+      - DB_POOL_MIN_IDLE=2
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local

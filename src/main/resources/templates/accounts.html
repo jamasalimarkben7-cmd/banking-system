@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Accounts')}" />
+<body>
+<header th:replace="~{fragments/layout :: nav}"></header>
+<main class="page narrow"><section class="page-heading"><div><p class="eyebrow">Your money</p><h1>Accounts</h1></div><a class="button primary" href="/transactions/new">Move money</a></section>
+<section class="account-list"><article class="account-row" th:each="account : ${accounts}"><div><span class="account-type" th:text="${account.accountType}">CHECKING</span><p class="account-number" th:text="${account.accountNumber}">000000</p></div><strong class="balance" th:text="'$' + ${#numbers.formatDecimal(account.balance, 1, 2)}">$0.00</strong></article><p class="muted" th:if="${#lists.isEmpty(accounts)}">No accounts are linked to your profile.</p></section></main>
+</body>
+</html>
